@@ -1,114 +1,111 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from 'react';
+import Detail from './src/detail';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import TraiDat from './src/screens/drawer/TraiDat.js';
+import Screen2 from './src/screens/drawer/screen2';
+import Screen3 from './src/screens/drawer/screen3';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import NavbarContent from './src/NavbarContent.js';
+import {Button} from 'native-base';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon1 from 'react-native-vector-icons/AntDesign';
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+const MaterialBottomTabs = createMaterialBottomTabNavigator();
+const MaterialTopTabs = createMaterialTopTabNavigator();
+
+const navOptionHandler = () => ({
+  headerShown: false
 });
 
-export default App;
+
+export default class App extends Component {
+
+  createTopicStack = () =>
+    <Stack.Navigator>
+      <Stack.Screen name="Detail" component={Detail} options={navOptionHandler}/>
+    </Stack.Navigator>
+
+  createLoveStack = (props) => 
+    <Stack.Navigator>
+      <Stack.Screen name="Screen3333" component={Screen3} options={navOptionHandler}/>
+    </Stack.Navigator>
+
+  createDrawer = () =>
+    <Drawer.Navigator drawerContent={props => <NavbarContent {...props} />}>
+      <Drawer.Screen name="Trang chủ" component={this.createNextStack} 
+        options={{
+          drawerIcon: () => <Icon name="home-outline" color="yellow" size={30} />
+
+        }}
+      />
+    </Drawer.Navigator>
+
+  createTopTabs = () => 
+    <MaterialTopTabs.Navigator
+      tabBarOptions={{
+        showIcon :'true',
+        labelStyle: { fontSize: 16, color: 'white', fontWeight:'bold' },
+        style: { backgroundColor: '#80aaff'},
+        tabStyle :{flexDirection: 'row'}
+      }}
+    >
+      <MaterialTopTabs.Screen name="CHỦ ĐỀ" component={this.createTopicStack} 
+        options={{
+          tabBarIcon: ({ tintcolor }) => (
+            <Icon name="library-shelves" size={30} color={'white'} />
+          )
+        }}
+      />
+      <MaterialTopTabs.Screen name="YÊU THÍCH" component={this.createLoveStack} 
+        options={{
+          tabBarIcon: ({ tintcolor }) => (
+            <Icon1 name="book" size={30} color={'white'} />
+          )
+        }}
+      />
+    </MaterialTopTabs.Navigator>
+  
+  createNextStack = ({navigation}) =>
+    <Stack.Navigator>
+      <Stack.Screen name="Top Tabs" children={this.createTopTabs} 
+      options={{
+        title: '10 VẠN CÂU HỎI VÌ SAO',
+        headerTitleAlign: 'center',
+        headerLeft: () => (
+            <Button
+              transparent
+              onPress={() => navigation.openDrawer()}>
+              <Icon name="menu" size={35} color={'white'} />
+            </Button>
+          ),
+        headerStyle: {backgroundColor: '#80c1ff'},
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        headerLeftContainerStyle: {paddingLeft: 20}
+        }}
+
+      />
+      <Stack.Screen name="Screen 3" children={Screen3}
+      />
+      <Stack.Screen name="Trai Dat" children={TraiDat}/>
+    </Stack.Navigator>
+  
+
+  render() {
+    return (
+      <NavigationContainer>
+       {this.createDrawer()}
+      </NavigationContainer>
+    );
+  }
+}
